@@ -423,7 +423,7 @@ func (rd *KvDB) TravelDBforverify(fn func(key ydcommon.IndexTableKey) (Hashtohas
 		beginKey = base58.Encode(iter.Key().Data())
 	}
 
-	if verifyTab == nil||len(verifyTab)==0{
+	if verifyTab == nil || len(verifyTab)==0 {
 		fmt.Println("[verify][error] verifyTab is nil")
 		return nil, beginKey, nil
 	}
@@ -433,12 +433,12 @@ func (rd *KvDB) TravelDBforverify(fn func(key ydcommon.IndexTableKey) (Hashtohas
 	})
 
 	for _ , v := range verifyTab{
-			ret,err := fn(v.Hash)
-			if err != nil{
-				fmt.Println("[verify][travelDB] verify error:",err,"key=",base58.Encode(iter.Key().Data()))
-				hashTab = append(hashTab,ret)
-		        continue
-			}
+			//ret,err := fn(v.Hash)
+			//if err != nil{
+			//	fmt.Println("[verify][travelDB] verify error:",err,"key=",base58.Encode(iter.Key().Data()))
+			//	hashTab = append(hashTab,ret)
+		    //    continue
+			//}
 			fmt.Println("[verify][travelDB] verify succ,key=",base58.Encode(iter.Key().Data()),"value=",iter.Value().Data(),"num=",num)
 	}
 
