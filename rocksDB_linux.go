@@ -402,7 +402,6 @@ func (rd *KvDB) TravelDBforverify(fn func(key ydcommon.IndexTableKey) (Hashtohas
 	var err error
 	var beginKey string
 	var verifyTab []ydcommon.IndexItem
-	nilStr :=""
 
 	iter := rd.GetSettedIter(startkey)
 	num := uint64(0)
