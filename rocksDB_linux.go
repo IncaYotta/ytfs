@@ -396,7 +396,6 @@ func (rd *KvDB) TravelDBforverify(fn func(key ydcommon.IndexTableKey) (Hashtohas
 	var err error
 	var beginKey string
 	var verifyTab []ydcommon.IndexItem
-	var verifyItem ydcommon.IndexItem
 
 	iter := rd.GetSettedIter(startkey)
 	num := uint64(0)
@@ -405,9 +404,15 @@ func (rd *KvDB) TravelDBforverify(fn func(key ydcommon.IndexTableKey) (Hashtohas
 		if num > traveEntries {
 			break
 		}
+		var verifyItem ydcommon.IndexItem
 		copy(verifyItem.Hash[:], iter.Key().Data())
 		verifyItem.OffsetIdx = ydcommon.IndexTableValue(binary.LittleEndian.Uint32(iter.Value().Data()))
 		verifyTab = append(verifyTab, verifyItem)
+	}
+
+	if verifyTab == nil{
+		fmt.Println("[verify][error] verifyTab is nil")
+		return nil, nil, nil
 	}
 
 	sort.Slice(verifyTab, func(i, j int) bool {
@@ -419,9 +424,8 @@ func (rd *KvDB) TravelDBforverify(fn func(key ydcommon.IndexTableKey) (Hashtohas
 			if err != nil{
 				fmt.Println("[verify][travelDB] verify error:",err,"key=",base58.Encode(iter.Key().Data()))
 				hashTab = append(hashTab,ret)
-		       continue
+		        continue
 			}
-
 			fmt.Println("[verify][travelDB] verify succ,key=",base58.Encode(iter.Key().Data()),"value=",iter.Value().Data(),"num=",num)
 	}
 
