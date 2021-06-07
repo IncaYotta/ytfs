@@ -412,7 +412,7 @@ func (rd *KvDB) TravelDBforverify(fn func(key ydcommon.IndexTableKey) (Hashtohas
 
 	if verifyTab == nil{
 		fmt.Println("[verify][error] verifyTab is nil")
-		return nil, nil, nil
+		return nil, "", nil
 	}
 
 	sort.Slice(verifyTab, func(i, j int) bool {
