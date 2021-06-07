@@ -9,7 +9,6 @@ import (
 	"github.com/yottachain/YTFS/opt"
 	"os"
 	"path"
-	"sort"
 	"sync"
 	"unsafe"
 )
@@ -416,9 +415,9 @@ func (rd *KvDB) TravelDBforverify(fn func(key ydcommon.IndexTableKey) (Hashtohas
 		return nil, nilStr, nil
 	}
 
-	sort.Slice(verifyTab, func(i, j int) bool {
-		return verifyTab[i].OffsetIdx < verifyTab[j].OffsetIdx
-	})
+	//sort.Slice(verifyTab, func(i, j int) bool {
+	//	return verifyTab[i].OffsetIdx < verifyTab[j].OffsetIdx
+	//})
 
 	for _ , v := range verifyTab{
 			ret,err := fn(v.Hash)
