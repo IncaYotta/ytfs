@@ -433,13 +433,13 @@ func (rd *KvDB) TravelDBforverify(fn func(key ydcommon.IndexTableKey) (Hashtohas
 	})
 
 	for _ , v := range verifyTab{
-			//ret,err := fn(v.Hash)
-			//if err != nil{
-			//	fmt.Println("[verify][travelDB] verify error:",err,"key=",base58.Encode(iter.Key().Data()))
-			//	hashTab = append(hashTab,ret)
-		    //    continue
-			//}
-			fmt.Println("[verify][travelDB] verify succ,key=",base58.Encode(iter.Key().Data()),"value=",iter.Value().Data(),"num=",num)
+			ret,err := fn(v.Hash)
+			if err != nil{
+				fmt.Println("[verify][travelDB] verify error:",err,"key=",base58.Encode(v.Hash),"value=",v.OffsetIdx,"num=",num)
+				hashTab = append(hashTab,ret)
+		        continue
+			}
+			fmt.Println("[verify][travelDB] verify succ,key=",base58.Encode(v.Hash),"value=",v.OffsetIdx,"num=",num)
 	}
 
 	return hashTab,beginKey,err
