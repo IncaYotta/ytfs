@@ -385,6 +385,12 @@ func (rd *KvDB)GetSettedIter(startkey string) *gorocksdb.Iterator{
 		begin,_ := base58.Decode(startkey)
 		iter.Seek(begin)
 	}
+
+	if ! iter.Valid(){
+		fmt.Println("[verify][error] iter check failed,set to first!")
+		iter.SeekToFirst()
+	}
+
 	return iter
 }
 
@@ -410,14 +416,21 @@ func (rd *KvDB) TravelDBforverify(fn func(key ydcommon.IndexTableKey) (Hashtohas
 		verifyTab = append(verifyTab, verifyItem)
 	}
 
-	if verifyTab == nil||len(verifyTab)==0{
-		fmt.Println("[verify][error] verifyTab is nil")
-		return nil, nilStr, nil
+	if !iter.Valid(){
+		fmt.Println("[verify][error] iter check failed,set beginkey to 0!")
+		beginKey = "0"
+	}else{
+		beginKey = base58.Encode(iter.Key().Data())
 	}
 
-	//sort.Slice(verifyTab, func(i, j int) bool {
-	//	return verifyTab[i].OffsetIdx < verifyTab[j].OffsetIdx
-	//})
+	if verifyTab == nil||len(verifyTab)==0{
+		fmt.Println("[verify][error] verifyTab is nil")
+		return nil, beginKey, nil
+	}
+
+	sort.Slice(verifyTab, func(i, j int) bool {
+		return verifyTab[i].OffsetIdx < verifyTab[j].OffsetIdx
+	})
 
 	for _ , v := range verifyTab{
 			ret,err := fn(v.Hash)
@@ -429,11 +442,6 @@ func (rd *KvDB) TravelDBforverify(fn func(key ydcommon.IndexTableKey) (Hashtohas
 			fmt.Println("[verify][travelDB] verify succ,key=",base58.Encode(iter.Key().Data()),"value=",iter.Value().Data(),"num=",num)
 	}
 
-	if !iter.Valid(){
-		beginKey = "0"
-	}else{
-		beginKey = base58.Encode(iter.Key().Data())
-	}
 	return hashTab,beginKey,err
 }
 
